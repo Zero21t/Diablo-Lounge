@@ -62,9 +62,9 @@ function startGame() {
   updateGame();
 }
 
-// 65% chance to crash between 1x and 3x, 35% chance between 3x and 50x
+// 55% chance to crash between 1x and 3x, 50% chance between 3x and 50x
 function determineCrashPoint() {
-  if (Math.random() < 0.65) {
+  if (Math.random() < 0.55) {
     return Math.random() * (3 - 1) + 1;
   } else {
     return Math.random() * (50 - 3) + 3;
