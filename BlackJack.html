@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="src/CSS/styles.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Game</title>
+    <style>
+        body { text-align: center; }
+        #game-area { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .hand { border: 1px solid black; padding: 10px; }
+        .card { display: inline-block; margin: 5px; }
+        #controls { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Blackjack</h1>
+    
+    <div id="dealer-hand" class="hand">
+        <h2>Dealer's Hand</h2>
+        <div id="dealer-cards"></div>
+    </div>
+    
+    <div id="player-hand" class="hand">
+        <h2>Player's Hand</h2>
+        <div id="player-cards"></div>
+    </div>
+    
+    <div id="split-hand" class="hand" style="display: none;">
+        <h2>Split Hand</h2>
+        <div id="split-cards"></div>
+    </div>
+    
+    <div id="controls">
+        <button id="hit">HIT</button>
+        <button id="call">CALL</button>
+        <button id="split" style="display: none;">SPLIT</button>
+    </div>
+
+    <script src="src/JS/deck.js" defer></script>
+</body>
+</html>
