@@ -1,0 +1,121 @@
+/* Universal rule to make all text bold */
+* {
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #0a0a0a; /* Solid black background */
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  margin: 20px 0;
+  font-size: 2rem;
+  color: #ffcc00;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/*
+A large container that covers a substantial area on the page.
+It holds both the canvas and the "Add Funds" panel.
+*/
+.game-container {
+  width: 900px;              /* Increased width */
+  height: 600px;             /* Increased height */
+  margin: 30px auto;         /* Center on the page */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Keep items at the top inside the container */
+  background: url('/src/Images/Background.png') no-repeat center center; /* Default background */
+  background-size: cover;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+/* Canvas remains transparent so the container’s background shows through */
+canvas {
+  background-color: transparent;
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+/* The "Add Funds" panel is inside the container for the initial view */
+#balance-section {
+  width: 60%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#balance-section p {
+  margin: 8px 0;
+}
+
+/* 
+The controls panel is below the container 
+so the buttons appear at the bottom once the game starts.
+*/
+#controls {
+  width: 900px;  /* match the container's width */
+  margin: 20px auto; /* center horizontally */
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+  display: none; /* hidden initially */
+}
+
+#controls p {
+  margin: 8px 0;
+}
+
+.input-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+/* Buttons styling */
+button {
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: #ffcc00;
+  border: none;
+  color: black;
+  border-radius: 5px;
+  margin: 3px;
+  transition: background-color 0.2s;
+}
+button:hover {
+  background-color: #ffd633;
+}
+
+/* Input box styling */
+.input-box {
+  width: 80px;
+  padding: 8px;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #666;
+  background-color: #333;
+  color: #fff;
+}
+.input-box:focus {
+  outline: none;
+  box-shadow: 0 0 5px #ffcc00;
+}
