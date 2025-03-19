@@ -1,56 +1,30 @@
-// Regular expression for validating a UUID (version-agnostic).
-const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Phantom Wallet Login & Connect
+async function connectPhantomWallet() {
+  if (window.solana && window.solana.isPhantom) {
+      try {
+          const response = await window.solana.connect(); // Request wallet connection
+          const walletAddress = response.publicKey.toString();
 
-// Listen for the sign in form submission.
-document.getElementById('signInForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const uuidInput = document.getElementById('uuidInput').value.trim();
-  const feedbackDiv = document.getElementById('signInFeedback');
-  feedbackDiv.innerHTML = '';
+          // Store wallet address in session storage (NOT local storage)
+          sessionStorage.setItem("phantomWalletAddress", walletAddress);
 
-  // Validate that the input is not empty.
-  if (!uuidInput) {
-    feedbackDiv.innerHTML = '<div class="alert alert-warning">Please enter a UUID.</div>';
-    return;
-  }
+          // Display wallet balance
+          fetchWalletBalance(walletAddress);
 
-  // Validate that the input is a properly formatted UUID.
-  if (!uuidRegex.test(uuidInput)) {
-    feedbackDiv.innerHTML = '<div class="alert alert-warning">The entered UUID is not valid.</div>';
-    return;
-  }
-
-  // Query the "users" table to check if the UUID exists.
-  const { data, error } = await supabaseClient
-    .from('users')
-    .select('id')
-    .eq('id', uuidInput)
-    .limit(1);
-
-  if (error) {
-    console.error('Error fetching data:', error);
-    feedbackDiv.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
-  } else if (data && data.length > 0) {
-    feedbackDiv.innerHTML = `<div class="alert alert-success">UUID match found! Sign in successful.</div>`;
-    // Close the modal after a short delay.
-    setTimeout(() => {
-      const modalEl = document.getElementById('signInModal');
-      const modalInstance = bootstrap.Modal.getInstance(modalEl);
-      if (modalInstance) {
-        modalInstance.hide();
+          // Hide the login modal
+          const modalEl = document.getElementById('signInModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalEl);
+          if (modalInstance) {
+              modalInstance.hide();
+          }
+      } catch (err) {
+          console.error("Phantom Wallet connection error:", err);
       }
-    }, 1000);
   } else {
-    feedbackDiv.innerHTML = `<div class="alert alert-info">No matching UUID found.</div>`;
+      alert("Phantom Wallet is not installed. Please install it to continue.");
   }
-});
-
-// Show the sign in modal on page load.
-window.addEventListener('load', () => {
-  const modalEl = document.getElementById('signInModal');
-  const modal = new bootstrap.Modal(modalEl, {
-    backdrop: 'static',
-    keyboard: false
-  });
-  modal.show();
+}
+// Auto-disconnect Phantom Wallet when the tab is closed or refreshed
+window.addEventListener("beforeunload", () => {
+  sessionStorage.removeItem("phantomWalletAddress");
 });

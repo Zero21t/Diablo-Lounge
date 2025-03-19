@@ -110,23 +110,6 @@ footer {
   box-shadow: 0 -4px 8px rgba(138, 3, 3, 0.8);
 }
 
-/* Connection Indicator Dot */
-.status-dot {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background-color: var(--infernal-red);
-  z-index: 1050;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.connected {
-  background-color: var(--gold);
-  transform: scale(1.2);
-}
-
 /* Modal Styling */
 .modal-content {
   background-color: var(--charcoal-grey);
