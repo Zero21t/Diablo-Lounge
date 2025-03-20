@@ -1,60 +1,42 @@
 async function fetchWalletBalance(walletAddress) {
     if (!walletAddress) {
-        document.getElementById("walletBalance").innerHTML = `<p>🏴‍☠️ Not Connected</p>`;
-        return;
+      document.getElementById("loginButton").innerHTML = `Login`;
+      return;
     }
   
-    // Change the RPC endpoint to a valid one
-    const solanaRpcUrl = "https://api.devnet.solana.com"; // or mainnet-beta if needed
-    const DOUBLOONS_MINT = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; // Your Token Mint Address
-    const DOUBLOONS_DECIMALS = 6;
+    // Use the Devnet RPC endpoint
+    const solanaRpcUrl = "https://api.devnet.solana.com";
+    const DOUBLOONS_MINT = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; // Token Mint Address
   
     try {
-        console.log("Fetching wallet balance for:", walletAddress);
+      console.log("Fetching wallet balance for:", walletAddress);
   
-        const tokenResponse = await fetch(solanaRpcUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                jsonrpc: "2.0",
-                id: 1,
-                method: "getTokenAccountsByOwner",
-                params: [
-                    walletAddress,
-                    { "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
-                    { "encoding": "jsonParsed" }
-                ]
-            }),
-        });
+      // Create a connection using the Solana web3.js API on Devnet
+      const connection = new solanaWeb3.Connection(solanaRpcUrl, "confirmed");
+      const ownerPublicKey = new solanaWeb3.PublicKey(walletAddress);
   
-        const tokenData = await tokenResponse.json();
-        let doubloonBalance = 0;
+      // Get parsed token accounts for the given mint address
+      const parsedAccounts = await connection.getParsedTokenAccountsByOwner(ownerPublicKey, {
+        mint: new solanaWeb3.PublicKey(DOUBLOONS_MINT)
+      });
   
-        console.log("🔍 Wallet Tokens:", tokenData.result.value);
+      let doubloonBalance = 0;
+      console.log("🔍 Parsed token accounts:", parsedAccounts.value);
   
-        if (tokenData.result && tokenData.result.value.length > 0) {
-            tokenData.result.value.forEach((account) => {
-                const mintAddress = account.account.data.parsed.info.mint;
-                const balanceInfo = account.account.data.parsed.info.tokenAmount;
+      parsedAccounts.value.forEach(({ account }) => {
+        const tokenAmount = account.data.parsed.info.tokenAmount;
+        console.log(`💰 Found token amount: ${tokenAmount.uiAmount}`);
+        doubloonBalance += tokenAmount.uiAmount;
+      });
   
-                console.log(`💰 Found Token Mint: ${mintAddress} | Raw Balance: ${balanceInfo.amount}`);
-  
-                if (mintAddress === DOUBLOONS_MINT) {
-                    doubloonBalance = balanceInfo.amount / Math.pow(10, DOUBLOONS_DECIMALS);
-                }
-            });
-        } else {
-            console.warn("⚠️ No SPL Tokens found in this wallet.");
-        }
-  
-        document.getElementById("walletBalance").innerHTML = `
-            <p>Doubloon Balance: ${doubloonBalance.toLocaleString()} 🏴‍☠️</p>
-        `;
-        document.getElementById("navWalletBalance").innerText = `${doubloonBalance.toLocaleString()} Doubloons 🏴‍☠️`;
-  
+      // Update the login button with Phantom icon and token balance
+      document.getElementById("loginButton").innerHTML = `
+        <img src="https://phantom.app/img/phantom-logo.png" alt="Phantom Wallet" style="height:24px; width:24px; border-radius:50%; margin-right:5px;" />
+        ${doubloonBalance.toLocaleString()}🏴‍☠️
+      `;
     } catch (error) {
-        console.error("Error fetching balance:", error);
-        document.getElementById("walletBalance").innerHTML = `<p>Error fetching balance</p>`;
+      console.error("Error fetching balance:", error);
+      document.getElementById("loginButton").innerHTML = `Error fetching balance`;
     }
   }
   

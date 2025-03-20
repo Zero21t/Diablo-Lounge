@@ -1,53 +1,48 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const connectButton = document.getElementById("phantomLoginButton");
-    if (connectButton) {
-      connectButton.addEventListener("click", connectPhantomWallet);
-    }
-  
-    // Auto-reconnect wallet on page load if saved
-    const savedWallet = localStorage.getItem("phantomWalletAddress");
-    if (savedWallet) {
-      console.log("Reconnecting wallet...");
-      fetchWalletBalance(savedWallet);
-    } else {
-      // Show the sign-in modal if no wallet is connected
-      const modalEl = document.getElementById('signInModal');
-      const modalInstance = new bootstrap.Modal(modalEl);
-      modalInstance.show();
-    }
-  });
-  
-  // Phantom Wallet Login & Connect (Only for Doubloons)
-  async function connectPhantomWallet() {
-    if (window.solana && window.solana.isPhantom) {
-      console.log("Phantom Wallet detected. Attempting connection...");
-  
-      try {
-        const response = await window.solana.connect({ onlyIfTrusted: true }); // Auto-connect if trusted
-        console.log("Wallet Connected!", response);
-  
-        const walletAddress = response.publicKey.toString();
-        console.log("Wallet Address:", walletAddress);
-        localStorage.setItem("phantomWalletAddress", walletAddress);
-        fetchWalletBalance(walletAddress);
-  
-        // Hide the sign-in modal after successful connection
-        const modalEl = document.getElementById('signInModal');
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) {
-          modalInstance.hide();
-        }
-  
-        // Update navbar with shortened wallet address
-        document.getElementById("navWalletBalance").innerText = `Wallet: ${walletAddress.slice(0, 6)}...`;
-  
-      } catch (err) {
-        console.error("Phantom Wallet connection error:", err);
-        alert(`Error connecting to Phantom Wallet: ${err.message}`);
+  const loginButton = document.getElementById("loginButton");
+
+  async function connectWallet() {
+      if (window.solana && window.solana.isPhantom) {
+          try {
+              const response = await window.solana.connect();
+              const publicKey = response.publicKey.toString();
+              console.log("Connected with wallet:", publicKey);
+
+              loginButton.innerText = `Connected: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+              loginButton.classList.remove("btn-danger");
+              loginButton.classList.add("btn-success");
+
+              await getTokenBalance(publicKey);
+          } catch (err) {
+              console.error("Wallet connection failed:", err);
+          }
+      } else {
+          alert("Phantom Wallet not found! Please install it.");
       }
-    } else {
-      console.warn("Phantom Wallet not detected.");
-      alert("Phantom Wallet is not installed. Please install it to continue.");
-    }
   }
-  
+
+  async function getTokenBalance(walletAddress) {
+      const { Connection, PublicKey, clusterApiUrl } = solanaWeb3;
+      const connection = new Connection(clusterApiUrl('devnet'));
+      const tokenMintAddress = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; // Replace with actual token mint address
+
+      try {
+          const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+              new PublicKey(walletAddress),
+              { mint: new PublicKey(tokenMintAddress) }
+          );
+
+          let balance = 0;
+          if (tokenAccounts.value.length > 0) {
+              balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+          }
+
+          alert(`Your token balance: ${balance}`);
+      } catch (error) {
+          console.error("Error fetching token balance:", error);
+          alert("Failed to fetch token balance.");
+      }
+  }
+
+  loginButton.addEventListener("click", connectWallet);
+});

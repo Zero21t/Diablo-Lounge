@@ -87,7 +87,6 @@ section h2 {
   gap: 20px; /* Adds spacing between items */
 }
 
-
 /* Buttons */
 .btn-danger {
   background-color: var(--infernal-red);
@@ -165,8 +164,8 @@ footer {
 
 /* Darken the modal backdrop */
 .modal-backdrop.show {
-  background-color: #000 !important; /* or var(--obsidian-black) */
-  opacity: 0.85 !important;         /* tweak the opacity if desired */
+  background-color: #000 !important;
+  opacity: 0.85 !important;
 }
 
 /* Optional: override any default .bg-white or .bg-light classes */
