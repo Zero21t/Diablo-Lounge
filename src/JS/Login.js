@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", async () => {
               loginButton.innerText = `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
               loginButton.classList.remove("btn-danger");
               loginButton.classList.add("btn-success");
+
+              // Save wallet to Supabase after login success
+              await saveWalletToSupabase(publicKey);
           } catch (err) {
               console.error("Wallet connection failed:", err);
           }
@@ -25,7 +28,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function getTokenBalance(walletAddress) {
       const { Connection, PublicKey, clusterApiUrl } = solanaWeb3;
       const connection = new Connection(clusterApiUrl('devnet'));
-      const tokenMintAddress = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; 
+      const tokenMintAddress = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; // Replace with actual token mint address
+
       try {
           const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
               new PublicKey(walletAddress),
