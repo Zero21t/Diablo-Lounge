@@ -8,15 +8,20 @@ document.addEventListener("DOMContentLoaded", async () => {
               const publicKey = response.publicKey.toString();
               console.log("Connected with wallet:", publicKey);
 
+              // Fetch username from Supabase
+              const username = await saveWalletToSupabase(publicKey);
+
               // Fetch and display token balance
               const balance = await getTokenBalance(publicKey);
               
-              loginButton.innerText = `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+              // Display username if available, otherwise show wallet address
+              loginButton.innerText = username 
+                  ? `${username} | Tokens: ${balance}`
+                  : `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+
               loginButton.classList.remove("btn-danger");
               loginButton.classList.add("btn-success");
 
-              // Save wallet to Supabase after login success
-              await saveWalletToSupabase(publicKey);
           } catch (err) {
               console.error("Wallet connection failed:", err);
           }
