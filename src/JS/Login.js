@@ -7,14 +7,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               const response = await window.solana.connect();
               const publicKey = response.publicKey.toString();
               console.log("Connected with wallet:", publicKey);
-
-              // Fetch username from Supabase
               const username = await saveWalletToSupabase(publicKey);
-
-              // Fetch and display token balance
               const balance = await getTokenBalance(publicKey);
-              
-              // Display username if available, otherwise show wallet address
               loginButton.innerText = username 
                   ? `${username} | Tokens: ${balance}`
                   : `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
@@ -33,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function getTokenBalance(walletAddress) {
       const { Connection, PublicKey, clusterApiUrl } = solanaWeb3;
       const connection = new Connection(clusterApiUrl('devnet'));
-      const tokenMintAddress = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"; // Replace with actual token mint address
+      const tokenMintAddress = "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti";
 
       try {
           const tokenAccounts = await connection.getParsedTokenAccountsByOwner(

@@ -13,7 +13,7 @@ async function saveWalletToSupabase(walletAddress) {
             .eq("wallet", walletAddress)
             .single();
 
-        if (fetchError && fetchError.code !== 'PGRST116') { // Ignore 'No rows found' error
+        if (fetchError && fetchError.code !== 'PGRST116') { 
             console.error("Error checking wallet in Supabase:", fetchError);
             return;
         }
@@ -24,7 +24,7 @@ async function saveWalletToSupabase(walletAddress) {
             return existingWallet.username;
         }
 
-        // If wallet does not have a username, prompt the user for one
+        // If wallet does not have a username, ask  user for one
         const username = prompt("Welcome! Please enter a username to link with your wallet:");
         if (!username) {
             alert("Username is required!");
