@@ -1,20 +1,32 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const loginButton = document.getElementById("loginButton");
+    const loginButton = document.getElementById("loginButton");
+
+    const storedWallet = localStorage.getItem("walletAddress");
+    const storedUsername = localStorage.getItem("username");
+    if (storedWallet) {
+        const balance = await getTokenBalance(storedWallet);
+        loginButton.innerText = storedUsername 
+          ? `${storedUsername} | Tokens: ${balance}`
+          : `Tokens: ${balance} | Wallet: ${storedWallet.slice(0, 6)}...${storedWallet.slice(-4)}`;
+        loginButton.classList.remove("btn-danger");
+        loginButton.classList.add("btn-success");
+      }
 
   async function connectWallet() {
       if (window.solana && window.solana.isPhantom) {
           try {
-              const response = await window.solana.connect();
-              const publicKey = response.publicKey.toString();
-              console.log("Connected with wallet:", publicKey);
-              const username = await saveWalletToSupabase(publicKey);
-              const balance = await getTokenBalance(publicKey);
-              loginButton.innerText = username 
-                  ? `${username} | Tokens: ${balance}`
-                  : `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
-
-              loginButton.classList.remove("btn-danger");
-              loginButton.classList.add("btn-success");
+            const response = await window.solana.connect();
+            const publicKey = response.publicKey.toString();
+            localStorage.setItem("walletAddress", publicKey);
+            console.log("Connected with wallet:", publicKey);
+            const username = await saveWalletToSupabase(publicKey);
+            localStorage.setItem("username", username);
+            const balance = await getTokenBalance(publicKey);
+            loginButton.innerText = username 
+                ? `${username} | Tokens: ${balance}`
+                : `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+            loginButton.classList.remove("btn-danger");
+            loginButton.classList.add("btn-success");
 
           } catch (err) {
               console.error("Wallet connection failed:", err);
