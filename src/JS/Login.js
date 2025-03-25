@@ -1,3 +1,7 @@
+window.getWalletAddress = () => localStorage.getItem("walletAddress");
+window.getTokenBalance = () => parseFloat(localStorage.getItem("tokenBalance") || "0");
+
+
 document.addEventListener("DOMContentLoaded", async () => {
     const loginButton = document.getElementById("loginButton");
 
@@ -18,10 +22,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             const response = await window.solana.connect();
             const publicKey = response.publicKey.toString();
             localStorage.setItem("walletAddress", publicKey);
+
+            
+            localStorage.setItem("tokenBalance", balance);
             console.log("Connected with wallet:", publicKey);
+
             const username = await saveWalletToSupabase(publicKey);
             localStorage.setItem("username", username);
             const balance = await getTokenBalance(publicKey);
+
             loginButton.innerText = username 
                 ? `${username} | Tokens: ${balance}`
                 : `Tokens: ${balance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;

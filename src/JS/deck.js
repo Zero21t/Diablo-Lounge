@@ -4,7 +4,7 @@ const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"
 let deck = [];
 let playerHand = [];
 let dealerHand = [];
-let playerBalance = 1000;
+let playerBalance = window.getTokenBalance(); 
 let currentBet = 0;
 let gameOver = false;
 
@@ -151,7 +151,8 @@ function resetGame() {
 
 function updateBalance(amount) {
   playerBalance += amount;
-  document.getElementById("balance").innerText = `$${playerBalance}`;
+  document.getElementById("balance").innerText = `$${playerBalance.toFixed(2)}`;
+  localStorage.setItem("tokenBalance", playerBalance.toFixed(2)); 
 }
 
 document.getElementById("place-bet").disabled = true;
@@ -189,4 +190,7 @@ document.getElementById("call").addEventListener("click", () => {
 window.onload = () => {
   shuffle();
   resetGame();
+  playerBalance = window.getTokenBalance(); // Retrieves the wallet balance from localStorage
+  document.getElementById("balance").innerText = `$${playerBalance.toFixed(2)}`;
 };
+
