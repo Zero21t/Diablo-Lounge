@@ -18,19 +18,17 @@ const accountBalanceDisplay = document.getElementById("accountBalance");
 const totalEarningsDisplay = document.getElementById("totalEarnings");
 
 // Initialize game variables
-let gameRunning = false;    // Is the game running?
-let multiplier = 1;         // Current multiplier value
-let crashPoint;             // Multiplier value at which the rocket crashes
-let playerBet = 0;          // Amount bet by the player
-let accountBalance = 0;     // Player's account balance
-let totalEarnings = 0;      // Total winnings (net)
-let cashedOut = false;      // Has the player cashed out?
-let animationId;            // ID for the animation frame
+let gameRunning = false;    
+let multiplier = 1;         
+let crashPoint;             
+let playerBet = 0;          
+let accountBalance = 0;     
+let totalEarnings = 0;      
+let cashedOut = false;      
+let animationId;            
 
-// *******************************
-// Function: setBalance
-// Purpose: Adds funds and starts the game UI.
-// *******************************
+
+//setBalance Function that adds funds and starts the game
 function setBalance() {
   // Read and convert the input balance to a number
   let inputBalance = parseFloat(document.getElementById("initialBalance").value);
@@ -51,13 +49,10 @@ function setBalance() {
   }
 }
 
-// *******************************
-// Function: resetFundsUI
-// Purpose: Resets the game and returns UI to add funds view.
-// *******************************
+// resetFunds Function Resets the game and returns UI to add funds view.
 function resetFundsUI() {
   resetGame(); // Reset game variables and stop animation
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
 
   // Hide game controls and show add funds panel
   controlsSection.style.display = "none";
@@ -70,10 +65,7 @@ function resetFundsUI() {
   gameContainer.style.backgroundSize = "cover";
 }
 
-// *******************************
-// Function: startGame
-// Purpose: Begins the game by setting game variables and starting the update loop.
-// *******************************
+// starts the game by setting game variables and starting the update loop.
 function startGame() {
   gameRunning = true;
   multiplier = 1;
@@ -82,10 +74,7 @@ function startGame() {
   updateGame(); // Start the game loop
 }
 
-// *******************************
-// Function: determineCrashPoint
-// Purpose: Returns a random multiplier value when the rocket will crash.
-// *******************************
+// Returns a random multiplier value when the rocket will crash.
 function determineCrashPoint() {
   // 55% chance for crash between 1x and 3x, 45% for 3x to 50x
   if (Math.random() < 0.55) {
@@ -95,10 +84,7 @@ function determineCrashPoint() {
   }
 }
 
-// *******************************
-// Function: placeBet
-// Purpose: Handles the bet placement and starts the game if funds are sufficient.
-// *******************************
+// Handles the bet placement and starts the game if funds are sufficient.
 function placeBet() {
   // Only allow placing a bet if game is not already running
   if (!gameRunning) {
@@ -107,21 +93,18 @@ function placeBet() {
       // Deduct bet amount from account balance
       accountBalance -= playerBet;
       accountBalanceDisplay.textContent = accountBalance.toFixed(2);
-      startGame(); // Start the game
+      startGame(); 
     } else {
       alert("Insufficient funds, please add funds to continue");
     }
   }
 }
 
-// *******************************
-// Function: cashOut
-// Purpose: Allows the player to cash out, calculates winnings, and stops the game.
-// *******************************
+// Allows the player to cash out, calculates winnings, and stops the game.
 function cashOut() {
   if (gameRunning && !cashedOut) {
-    let payout = playerBet * multiplier; // Total payout
-    let netProfit = payout - playerBet;    // Net winnings
+    let payout = playerBet * multiplier; 
+    let netProfit = payout - playerBet;   
     totalEarnings += netProfit;
     accountBalance += payout;
     cashedOut = true;
@@ -130,10 +113,7 @@ function cashOut() {
   }
 }
 
-// *******************************
-// Function: updateGame
-// Purpose: Main game loop that increases multiplier and redraws the rocket.
-// *******************************
+// Purpose: updateGame function that increases multiplier and redraws the rocket.
 function updateGame() {
   if (!gameRunning) return; // Stop loop if game is not running
 
@@ -149,7 +129,7 @@ function updateGame() {
   // Check if the rocket has reached the crash point
   if (multiplier >= crashPoint) {
     if (!cashedOut) {
-      // If the player did not cash out, subtract the bet from earnings
+      // If the player did not cash out subtract the bet from earnings
       totalEarnings -= playerBet;
       updateEarnings();
     }
@@ -157,7 +137,7 @@ function updateGame() {
     cancelAnimationFrame(animationId);
     drawExplosion();
 
-    // After 1 second, alert the crash and reset the game
+    // alert the crash and reset the game
     setTimeout(function() {
       alert("CRASH! The rocket exploded at " + multiplier.toFixed(2) + "x");
       resetGame();
@@ -169,10 +149,7 @@ function updateGame() {
   }
 }
 
-// *******************************
-// Function: drawGame
-// Purpose: Clears the canvas and draws the rocket with updated position and size.
-// *******************************
+//Clear the canvas and draws the rocket at original position with updated position and size.
 function drawGame() {
   // Clear previous drawing
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -181,7 +158,7 @@ function drawGame() {
   let x = (multiplier / 50) * canvas.width;
   let y = canvas.height - (multiplier / 50) * canvas.height;
 
-  // Calculate the rocket size (decreases by 5% every 5x multiplier)
+  // Calculate and decrease rocket size by 5% every 5x multiplier
   const baseRocketSize = 95;
   let scaleFactor = Math.pow(0.95, Math.floor(multiplier / 5));
   let rocketWidth = baseRocketSize * scaleFactor;
@@ -191,10 +168,8 @@ function drawGame() {
   ctx.drawImage(rocketImg, x - rocketWidth / 2, y - rocketHeight / 2, rocketWidth, rocketHeight);
 }
 
-// *******************************
-// Function: drawExplosion
-// Purpose: Clears the canvas and draws the explosion image with the same size as the rocket.
-// *******************************
+
+//At crash position Clear the canvas and draw the explosion image with the same size as the rocket.
 function drawExplosion() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -210,20 +185,14 @@ function drawExplosion() {
   ctx.drawImage(explodeImg, x - imgWidth / 2, y - imgHeight / 2, imgWidth, imgHeight);
 }
 
-// *******************************
-// Function: resetGame
-// Purpose: Resets game variables and stops any ongoing animation.
-// *******************************
+//Resets game variables and stops any ongoing animation.
 function resetGame() {
   gameRunning = false;
   playerBet = 0;
   cancelAnimationFrame(animationId);
 }
 
-// *******************************
-// Function: updateEarnings
-// Purpose: Updates the displayed earnings and account balance.
-// *******************************
+// Update the displayed earnings and account balance.
 function updateEarnings() {
   totalEarningsDisplay.textContent = totalEarnings.toFixed(2);
   accountBalanceDisplay.textContent = accountBalance.toFixed(2);
