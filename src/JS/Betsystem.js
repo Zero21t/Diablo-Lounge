@@ -34,9 +34,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      // Delegate approval step (if applicable) is omitted in this version.
-      // Instead, we simply send the wallet and bet details to the server.
-      const payload = { publicKey: walletPublicKey, betAmount };
+      // Create a delegate approval message with delegator set to the wallet public key.
+      const delegateApprovalMessage = { delegator: walletPublicKey };
+      const encodedMessage = new TextEncoder().encode(JSON.stringify(delegateApprovalMessage));
+
+      // Ask Phantom to sign the message.
+      const signedMessage = await window.solana.signMessage(encodedMessage);
+      const signatureArray = signedMessage.signature;
+
+      // Convert the Uint8Array signature to a base64 string.
+      let binary = '';
+      for (let i = 0; i < signatureArray.byteLength; i++) {
+        binary += String.fromCharCode(signatureArray[i]);
+      }
+      const signatureBase64 = btoa(binary);
+
+      // Build the payload with the delegate approval details.
+      const payload = { 
+        publicKey: walletPublicKey, 
+        betAmount, 
+        delegateApproval: {
+          message: delegateApprovalMessage,
+          signature: signatureBase64
+        }
+      };
+
       const response = await fetch("http://localhost:3000/bet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
