@@ -62,5 +62,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   
     loginButton.addEventListener("click", connectWallet);
-  });
-  
+});

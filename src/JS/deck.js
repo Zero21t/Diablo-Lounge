@@ -190,7 +190,6 @@ document.getElementById("call").addEventListener("click", () => {
 window.onload = () => {
   shuffle();
   resetGame();
-  playerBalance = window.getTokenBalance(); // Retrieves the wallet balance from localStorage
+  playerBalance = window.getTokenBalance();
   document.getElementById("balance").innerText = `$${playerBalance.toFixed(2)}`;
 };
-
