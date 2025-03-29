@@ -1,5 +1,4 @@
 // src/JS/Betsystem.js
-
 import {
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
@@ -9,7 +8,7 @@ import {
 } from "https://esm.sh/@solana/spl-token@0.3.5";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Attempt auto-reconnect if wallet is installed but not yet connected.
+  // Auto-reconnect if wallet is installed but not connected.
   if (window.solana && !window.solana.publicKey) {
     try {
       await window.solana.connect({ onlyIfTrusted: true });
@@ -22,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const placeBetButton = document.getElementById("place-bet");
 
   placeBetButton.addEventListener("click", async () => {
-    // 1) Ensure the user’s Phantom wallet is connected.
+    // 1) Ensure the user's Phantom wallet is connected.
     if (!window.solana || !window.solana.publicKey) {
       try {
         await window.solana.connect();
@@ -45,15 +44,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      // 3) Create a Solana connection to devnet.
+      // 3) Establish a connection to devnet.
       const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
 
       // 4) Define the token mint address (must match your Withdraw.js).
-      const tokenMintAddress = new solanaWeb3.PublicKey(
-        "mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti"
-      );
+      const tokenMintAddress = new solanaWeb3.PublicKey("mntx96ePfermX8Nzt95osYHdQmyjNPbE6seiUfLqpti");
 
-      // 5) Get the player's associated token account (ATA).
+      // 5) Convert bet amount to raw units.
+      // Assume the token has 2 decimals; adjust tokenDecimals if necessary.
+      const tokenDecimals = 2;
+      const rawBetAmount = Math.round(betAmount * Math.pow(10, tokenDecimals));
+
+      // 6) Get the player's associated token account (ATA).
       const playerTokenAccount = await getAssociatedTokenAddress(
         tokenMintAddress,
         playerPubKey,
@@ -62,13 +64,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         TOKEN_PROGRAM_ID
       );
 
-      // 6) Check if the player’s ATA actually exists on-chain; if not, create it.
+      // 7) Check if the player's ATA exists; if not, add an instruction to create it.
       let transaction = new solanaWeb3.Transaction();
       const playerAtaInfo = await connection.getAccountInfo(playerTokenAccount);
       if (!playerAtaInfo) {
         const createPlayerAtaIx = createAssociatedTokenAccountInstruction(
           playerPubKey,         // payer
-          playerTokenAccount,   // the ATA to create
+          playerTokenAccount,   // ATA to create
           playerPubKey,         // owner of the new ATA
           tokenMintAddress,
           ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -77,12 +79,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         transaction.add(createPlayerAtaIx);
       }
 
-      // 7) Define the vault’s public key (same as in your server’s vault wallet).
-      const vaultPublicKey = new solanaWeb3.PublicKey(
-        "dadUa3DRj79Fv4M6pNUExNjXaXZ8P8zCoC863zWvuPP"
-      );
+      // 8) Define the vault's public key (matches the vault in your server/Withdraw.js).
+      const vaultPublicKey = new solanaWeb3.PublicKey("dadUa3DRj79Fv4M6pNUExNjXaXZ8P8zCoC863zWvuPP");
 
-      // 8) Get the vault’s associated token account (ATA).
+      // 9) Get the vault's associated token account.
       const vaultTokenAccount = await getAssociatedTokenAddress(
         tokenMintAddress,
         vaultPublicKey,
@@ -91,12 +91,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         TOKEN_PROGRAM_ID
       );
 
-      // 9) Check if the vault’s ATA exists on-chain; if not, create it (the player pays).
+      // 10) Check if the vault's ATA exists; if not, add an instruction to create it.
       const vaultAtaInfo = await connection.getAccountInfo(vaultTokenAccount);
       if (!vaultAtaInfo) {
         const createVaultAtaIx = createAssociatedTokenAccountInstruction(
-          playerPubKey,       // payer
-          vaultTokenAccount,  // the ATA to create
+          playerPubKey,       // payer (player pays creation fee here)
+          vaultTokenAccount,  // ATA to create
           vaultPublicKey,     // owner of the new ATA
           tokenMintAddress,
           ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -105,37 +105,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         transaction.add(createVaultAtaIx);
       }
 
-      // 10) Create the transfer instruction to move betAmount tokens from the player's ATA to the vault's ATA.
+      // 11) Create the transfer instruction to move rawBetAmount tokens from the player's ATA to the vault's ATA.
       const transferIx = createTransferInstruction(
         playerTokenAccount,
         vaultTokenAccount,
-        playerPubKey, // the player's wallet is the authority
-        betAmount,
+        playerPubKey, // authority (player signs)
+        rawBetAmount,
         [],
         TOKEN_PROGRAM_ID
       );
       transaction.add(transferIx);
 
-      // 11) Finalize, sign, and send the transaction.
+      // 12) Finalize, sign, and send the transaction.
       transaction.feePayer = playerPubKey;
       const { blockhash } = await connection.getRecentBlockhash();
       transaction.recentBlockhash = blockhash;
 
-      // Ask the player’s wallet to sign.
       const signedTx = await window.solana.signTransaction(transaction);
       const rawTx = signedTx.serialize();
       const txId = await connection.sendRawTransaction(rawTx);
       await connection.confirmTransaction(txId);
       console.log("Transfer transaction confirmed:", txId);
 
-      // 12) Build a payload to send to your server (including the transaction ID).
+      // 13) Build a payload to send to your server (including the transaction ID).
       const payload = {
         publicKey: walletPublicKey,
         betAmount,
         transactionId: txId
       };
 
-      // 13) POST the bet details to your server endpoint.
       const response = await fetch("http://localhost:3000/bet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -143,7 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const result = await response.json();
       console.log("Bet recorded on server:", result);
-
     } catch (err) {
       console.error("Error sending bet request:", err);
       alert("Bet transaction failed. See console for details.");
