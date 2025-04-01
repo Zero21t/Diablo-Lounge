@@ -1,7 +1,8 @@
 let isSpinning = false;
 let currentRotation = 0;
 let userBet = null;
-let userChips = 5000;
+let userChips = parseFloat(localStorage.getItem("tokenBalance"));
+
 
 const totalNumbers = 37;// NUmbers 0 to 36
 const angleStepDeg = 360 / totalNumbers;   
@@ -9,6 +10,8 @@ const angleStepRad = angleStepDeg * (Math.PI / 180);
 
 window.onload = function () {
   wheel();
+  document.getElementById("chips").textContent = `Chips: ${userChips}`;
+
 };
 
 
@@ -65,6 +68,7 @@ function spinWheel() {
   // Deducts wager amount
   userChips -= betAmount;
   document.getElementById("chips").textContent = `Chips: ${userChips}`;
+  localStorage.setItem("tokenBalance", userChips.toString());
   isSpinning = true;
   
   const randomIndex = Math.floor(Math.random() * totalNumbers);
@@ -109,6 +113,7 @@ function spinWheel() {
     
     document.getElementById("result").textContent = resultText;
     document.getElementById("chips").textContent = `Chips: ${userChips}`;
+    localStorage.setItem("tokenBalance", userChips.toString());
     userBet = null;
     document.getElementById("bet").textContent = "Your Bet: None";
     betAmountInput.value = "";

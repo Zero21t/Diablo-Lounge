@@ -6,7 +6,6 @@
   --gold:           #FFD700;
 }
 
-/* Global Styles */
 body {
   background: radial-gradient(ellipse at center, #000 0%, var(--obsidian-black) 100%);
   color: var(--gold);
@@ -15,7 +14,6 @@ body {
   padding: 0;
 }
 
-/* Bold Typography for Menacing Impact using Bungee */
 h1, h2, h5, .navbar-brand, .nav-link {
   font-family: 'Bungee', cursive;
   text-shadow: 3px 3px 10px var(--blood-red);
@@ -37,7 +35,6 @@ h1, h2, h5, .navbar-brand, .nav-link {
   color: var(--gold) !important;
 }
 
-/* Hero Section */
 #hero {
   background: 
     linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
@@ -58,7 +55,6 @@ h1, h2, h5, .navbar-brand, .nav-link {
   letter-spacing: 1px;
 }
 
-/* Sections */
 section {
   padding: 80px 0;
 }
