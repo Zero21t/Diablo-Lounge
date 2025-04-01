@@ -1,0 +1,118 @@
+/* Apply bold text and proper box sizing to every element */
+* {
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+/* Body styling for background and text */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #0a0a0a; 
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main title styling */
+h1 {
+  margin: 20px 0;
+  font-size: 2rem;
+  color: #ffcc00;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Game container with background image that holds the canvas and add funds panel */
+.game-container {
+  width: 900px;              
+  height: 600px;             
+  margin: 30px auto;         
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  background: url('/src/Images/Background.png') no-repeat center center;
+  background-size: cover;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s ease;
+}
+
+/* styling for canvas that makes it transparent with rounded corners */
+canvas {
+  background-color: transparent;
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+/* Style for the initial add funds panel */
+#balance-section {
+  width: 60%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+/* Paragraph inside the add funds panel */
+#balance-section p {
+  margin: 8px 0;
+}
+
+/* Style for the controls panel (hidden initially) */
+#controls {
+  width: 900px;             
+  margin: 20px auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+  display: none;            /* Hide until funds are added */
+}
+
+/* Paragraphs inside the controls panel */
+#controls p {
+  margin: 8px 0;
+}
+
+/* Container for the bet input and button */
+.input-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+/* Button styling */
+button {
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: #ffcc00;
+  border: none;
+  color: black;
+  border-radius: 5px;
+  margin: 3px;
+  transition: background-color 0.2s;
+}
+button:hover {
+  background-color: #ffd633;
+}
+
+/* Styling for input boxes */
+.input-box {
+  width: 80px;
+  padding: 8px;
+  font-size: 15px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #666;
+  background-color: #333;
+  color: #fff;
+}
+.input-box:focus {
+  outline: none;
+  box-shadow: 0 0 5px #ffcc00;
+}
