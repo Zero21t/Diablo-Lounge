@@ -116,6 +116,8 @@ function cashOut() {
     cashedOut = true;
     updateEarnings(); // Update displayed balances
     alert("Cashed out at " + multiplier.toFixed(2) + "x! Net profit: $" + netProfit.toFixed(2));
+    localStorage.setItem("tokenBalance", accountBalance.toFixed(2));
+
     gameRunning = false;
     cancelAnimationFrame(animationId);
     setTimeout(function() {
@@ -208,4 +210,5 @@ function resetGame() {
 function updateEarnings() {
   totalEarningsDisplay.textContent = totalEarnings.toFixed(2);
   accountBalanceDisplay.textContent = accountBalance.toFixed(2);
+  localStorage.setItem("tokenBalance", accountBalance.toFixed(2));
 }
