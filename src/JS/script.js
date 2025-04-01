@@ -11,6 +11,8 @@ window.onload = function () {
   wheel();
 };
 
+
+
 function wheel() {
   const canvas = document.getElementById("rouletteWheel");
   const ctx = canvas.getContext("2d");
