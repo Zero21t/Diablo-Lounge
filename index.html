@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diablo's Rocket Rider</title>
+  <!--Link to css file -->
+  <link rel="stylesheet" href="/src/CSS/style.css" />
+</head>
+<body>
+
+  <h1>Diablo's Rocket Rider</h1>
+
+  <!-- Game container holds the canvas and the "Add Funds" panel -->
+  <div class="game-container" id="gameContainer">
+    <!-- Canvas displaying the rocket and explosion -->
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    
+    <!-- Panel to add funds before starting the game -->
+    <div id="balance-section">
+      <p>Add Funds to Start the Game</p>
+      <input type="number" id="initialBalance" class="input-box" placeholder="$100">
+      <button onclick="setBalance()">Add Funds</button>
+    </div>
+  </div>
+
+  <!-- controls for betting, cashing out and showing earnings -->
+  <div id="controls">
+    <p>Current Multiplier: <span id="multiplier">1.00x</span></p>
+    <div class="input-section">
+      <input type="number" id="betAmount" class="input-box" placeholder="$1">
+      <button onclick="placeBet()">Place Wager</button>
+    </div>
+    <button onclick="cashOut()" style="background-color:#ff3300;">Bail</button>
+    <p>Balance: $<span id="accountBalance">0.00</span></p>
+    <p>Total Winnings (Net): $<span id="totalEarnings">0.00</span></p>
+    <button onclick="resetFundsUI()">Add More Funds</button>
+  </div>
+
+  <!--Link to js file -->
+  <script src="/src/JS/script.js"></script>
+</body>
+</html>
