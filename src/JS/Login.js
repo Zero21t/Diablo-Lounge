@@ -15,21 +15,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         loginButton.classList.add("btn-success");
       }
   
-    async function connectWallet() {
+      async function connectWallet() {
         if (window.solana && window.solana.isPhantom) {
             try {
-              const response = await window.solana.connect();
-              const publicKey = response.publicKey.toString();
-              localStorage.setItem("walletAddress", publicKey);
-              console.log("Connected with wallet:", publicKey);
-              const username = await saveWalletToSupabase(publicKey);
-              localStorage.setItem("username", username);
-              const tokenBalance = await getTokenBalance(publicKey);
-              loginButton.innerText = username 
-                  ? `${username} | Tokens: ${tokenBalance}`
-                  : `Tokens: ${tokenBalance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
-              loginButton.classList.remove("btn-danger");
-              loginButton.classList.add("btn-success");
+                const response = await window.solana.connect();
+                const publicKey = response.publicKey.toString();
+                localStorage.setItem("walletAddress", publicKey);
+                console.log("Connected with wallet:", publicKey);
+                const username = await saveWalletToSupabase(publicKey);
+                localStorage.setItem("username", username);
+                const tokenBalance = await getTokenBalance(publicKey);
+    +           localStorage.setItem("tokenBalance", tokenBalance); 
+                loginButton.innerText = username 
+                    ? `${username} | Tokens: ${tokenBalance}`
+                    : `Tokens: ${tokenBalance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
+                loginButton.classList.remove("btn-danger");
+                loginButton.classList.add("btn-success");
             } catch (err) {
                 console.error("Wallet connection failed:", err);
             }
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Phantom Wallet not found! Please install it.");
         }
     }
+    
   
     async function getTokenBalance(walletAddress) {
         const { Connection, PublicKey, clusterApiUrl } = solanaWeb3;

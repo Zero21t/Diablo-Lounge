@@ -29,25 +29,31 @@ let animationId;
 
 
 //setBalance Function that adds funds and starts the game
-function setBalance() {
-  // Read and convert the input balance to a number
-  let inputBalance = parseFloat(document.getElementById("initialBalance").value);
-  if (inputBalance > 0) {
-    // Update account balance
-    accountBalance += inputBalance;
-    accountBalanceDisplay.textContent = accountBalance.toFixed(2);
+async function setBalance() {
+    const walletAddress = window.getWalletAddress();
+    if (!walletAddress) {
+      alert("Please connect your wallet first!");
+      return;
+    }
 
-    // Hide the add funds panel and show the game controls
-    balanceSection.style.display = "none";
-    controlsSection.style.display = "block";
-    
-    // Change the background to a stars image for the game view
-    gameContainer.style.background = "url('/src/Images/Stars.gif') no-repeat center center";
-    gameContainer.style.backgroundSize = "cover";
-  } else {
-    alert("Enter a valid starting balance!");
+    // Retrieve wallet balance from localStorage (set during wallet connection)
+    const walletBalance = parseFloat(localStorage.getItem("tokenBalance") || "0");
+    if (walletBalance > 0) {
+      accountBalance += walletBalance;
+      accountBalanceDisplay.textContent = accountBalance.toFixed(2);
+
+      // Hide the add funds panel and show the game controls
+      balanceSection.style.display = "none";
+      controlsSection.style.display = "block";
+     
+      // Change the background to a stars image for the game view
+      gameContainer.style.background = "url('/src/Images/Stars.gif') no-repeat center center";
+      gameContainer.style.backgroundSize = "cover";
+    } else {
+      alert("Wallet balance is zero or not available!");
+    }
   }
-}
+  
 
 // resetFunds Function Resets the game and returns UI to add funds view.
 function resetFundsUI() {
@@ -110,6 +116,12 @@ function cashOut() {
     cashedOut = true;
     updateEarnings(); // Update displayed balances
     alert("Cashed out at " + multiplier.toFixed(2) + "x! Net profit: $" + netProfit.toFixed(2));
+    gameRunning = false;
+    cancelAnimationFrame(animationId);
+    setTimeout(function() {
+     resetGame();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }, 1000);
   }
 }
 
