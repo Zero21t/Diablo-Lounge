@@ -365,6 +365,8 @@ function evaluateResult(bet, multiplier) {
         messageEl.textContent = 'You lost'; //Display a Loss Message in Red
         messageEl.style.color = 'red';
         const lossAmount = bet * multiplier; //Calculate The Loss
+        logGameResult("Slots", bet, lossAmount, "Loss");
+        PlayerResults("loss");
         totalLost += lossAmount; //Update The Total Lost With The Newly Calculated Amount
         currentBalance -= (lossAmount - bet); //Update The Current Balance
         losses++; //Increment The Loss Counter
@@ -378,6 +380,8 @@ function evaluateResult(bet, multiplier) {
         messageEl.textContent = winText; 
         messageEl.style.color = 'green'; //Display The Message in Green
         const winAmount = bet * multiplier * winCount; //Calculate The Amount Won
+        logGameResult("Slots", bet, winAmount, "Win");
+        PlayerResults("win");
         totalWon += winAmount; //Update The Total Amount Won
         currentBalance += winAmount; //Update The Current Balance 
         wins++; //Increment The Win Counter

@@ -112,7 +112,9 @@ input, select {
   color: white;
   width: 80px;
 }
-
+#balance {
+  width: auto;    
+}
 
 /*Multiplier Dynamic Lights*/
 #multiplier {
