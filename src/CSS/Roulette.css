@@ -11,8 +11,6 @@ body {
     min-height: 100vh;
 }
 
-
-
 .casino {
     background: linear-gradient(to bottom, #1e1e1e, #131313);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
@@ -36,6 +34,7 @@ h1 {
     background: linear-gradient(45deg, #d4af37, #ffd700, #e6c200);
     background-size: 200% 200%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientAnimation 5s ease infinite, neonGlow 2s ease-in-out infinite;
     transform: perspective(600px) rotateX(10deg);
