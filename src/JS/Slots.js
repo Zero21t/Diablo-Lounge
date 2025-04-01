@@ -38,7 +38,16 @@ let wins = 0;
 let losses = 0;
 let isSpinning = false; //Flag to Ensure no Multiple Spins
 
-
+//ensures wallet amount is loaded once page loads -Aman//
+document.addEventListener("DOMContentLoaded", () => {
+    const balanceInput = document.getElementById('balance');
+    if (balanceInput && window.getTokenBalance) {
+      const walletBalance = window.getTokenBalance();
+      if (walletBalance > 0) {
+        balanceInput.value = walletBalance;
+      }
+    }
+  });
 //=====Utility Functions=====
 
 /**
@@ -168,6 +177,7 @@ function updateLog() {
       <p>Games Played: ${gamesPlayed} | Wins: ${wins} | Losses: ${losses}</p>
     `;
     document.getElementById('balance').value = currentBalance; //Update The Balance
+    localStorage.setItem("tokenBalance", currentBalance.toFixed(2));//updates local amount -Aman//
   }
 
 /**
@@ -237,10 +247,18 @@ function spinSlots() {
 
     //Set The Initial And Current Balance Based on The Input Value
     if (initialBalance === null) {
-        initialBalance = parseFloat(balanceInput.value);
-        currentBalance = initialBalance;
-        console.log("Initial balance set to:", initialBalance); //Update The Console To Check And Ensure That The Ititial Value is Set to The Current Input Value 
-        balanceInput.disabled = true; //Disable to Prevent Further Changes
+        // Retrieve the wallet's token balance from localStorage using your wallet function
+    const walletBalance = window.getTokenBalance();
+       if (walletBalance <= 0) {
+        alert("Your wallet balance is zero or not available. Please connect your wallet.");
+        return;
+    }
+    initialBalance = walletBalance;
+    currentBalance = initialBalance;
+    console.log("Initial balance set to:", initialBalance);
+    // Update the balance field and disable changes
+    balanceInput.value = initialBalance;
+    balanceInput.disabled = true;
     }
 
     //Get And Convert The Bet Amount and Multiplier From The UI Into numbers

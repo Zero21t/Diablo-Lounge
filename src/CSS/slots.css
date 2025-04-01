@@ -53,7 +53,7 @@ body {
   animation: infernalGlow 1s infinite alternate; /*Apply a Special Animation Defined Later*/
   width: 400px;
   max-width: 90%; /*Allow Scaling on Smaller Screens*/
-  margin: 0 auto;
+  margin-top: 80px; 
 }
 
 /*Special Animation: infernalGlow*/
