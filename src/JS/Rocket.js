@@ -117,7 +117,8 @@ function cashOut() {
     updateEarnings(); // Update displayed balances
     alert("Cashed out at " + multiplier.toFixed(2) + "x! Net profit: $" + netProfit.toFixed(2));
     localStorage.setItem("tokenBalance", accountBalance.toFixed(2));
-
+    logGameResult("Rocket", playerBet, payout, "win");
+    PlayerResults("win");
     gameRunning = false;
     cancelAnimationFrame(animationId);
     setTimeout(function() {
@@ -145,7 +146,10 @@ function updateGame() {
     if (!cashedOut) {
       // If the player did not cash out subtract the bet from earnings
       totalEarnings -= playerBet;
+      logGameResult("Rocket", playerBet, "0", "loss");
+      PlayerResults("loss");
       updateEarnings();
+      
     }
     // Stop the game loop and show explosion
     cancelAnimationFrame(animationId);

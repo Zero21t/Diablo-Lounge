@@ -365,7 +365,7 @@ function evaluateResult(bet, multiplier) {
         messageEl.textContent = 'You lost'; //Display a Loss Message in Red
         messageEl.style.color = 'red';
         const lossAmount = bet * multiplier; //Calculate The Loss
-        logGameResult("Slots", bet, lossAmount, "Loss");
+        logGameResult("Slots", lossAmount, lossAmount, "Loss");
         PlayerResults("loss");
         totalLost += lossAmount; //Update The Total Lost With The Newly Calculated Amount
         currentBalance -= (lossAmount - bet); //Update The Current Balance

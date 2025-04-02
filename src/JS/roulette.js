@@ -107,8 +107,12 @@ function spinWheel() {
         resultText = `You won! The wheel landed on ${winningColor.toUpperCase()}. You win ${betAmount * 2} chips!`;
         userChips += betAmount * 2; // 2x multiplier for red or black
       }
+      logGameResult("Roulette", betAmount, winningsAmount, "win");
+      PlayerResults("win");
     } else {
       resultText = `You lost! The wheel landed on ${winningColor.toUpperCase()}. You lose ${betAmount} chips.`;
+      logGameResult("Roulette", betAmount, 0, "loss");
+      PlayerResults("loss");
     }
     
     document.getElementById("result").textContent = resultText;
