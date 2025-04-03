@@ -90,6 +90,8 @@ function checkForBlackjack() {
       endGame("Both got Blackjack! It's a tie!");
     } else {
       updateBalance(currentBet * 2.5);
+      logGameResult("Blackjack", currentBet, '0', "win");
+      PlayerResults("win");
       endGame("Blackjack! You win 3:2 payout!");
     }
   }
@@ -116,18 +118,26 @@ function dealerPlay() {
 function determineWinner() {
   const playerTotal = getHandValue(playerHand);
   const dealerTotal = getHandValue(dealerHand);
+  let WL = currentBet * 2;
   if (dealerTotal > 21) {
     updateBalance(currentBet * 2);
     endGame("Dealer busts! Player wins!");
+    logGameResult("Blackjack", currentBet, WL, "win");
+    PlayerResults("win");
   } else if (playerTotal > dealerTotal) {
     updateBalance(currentBet * 2);
     endGame("Player wins!");
+    logGameResult("Blackjack", currentBet, WL, "win");
+    PlayerResults("win");
   } else if (playerTotal < dealerTotal) {
     updateBalance(0);
     endGame("Dealer wins!");
+    logGameResult("Blackjack", currentBet, currentBet, "win");
+    PlayerResults("loss");
   } else {
     updateBalance(currentBet);
     endGame("It's a tie! Your bet is returned.");
+    logGameResult("Blackjack", currentBet, "0", "tie");
   }
 }
 
