@@ -86,6 +86,9 @@ section h2 {
   display: flex;
   justify-content: center;
   gap: 20px; /* Adds spacing between items */
+}#rocket-game{
+  margin-left: 34%;
+  align-items: center;
 }
 
 /* Buttons */

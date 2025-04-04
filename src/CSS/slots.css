@@ -30,7 +30,7 @@ html, body {
 body {
   font-family: "Montserrat", sans-serif;
   text-align: center;
-  background: black url(/src/images/flames.gif) no-repeat center center fixed;
+  background: black url(/src/Images/flames.gif) no-repeat center center fixed;
   background-size: cover;
   color: white;
   display: flex;

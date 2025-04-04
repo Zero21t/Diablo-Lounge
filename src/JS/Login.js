@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const username = await saveWalletToSupabase(publicKey);
                 localStorage.setItem("username", username);
                 const tokenBalance = await getTokenBalance(publicKey);
-    +           localStorage.setItem("tokenBalance", tokenBalance); 
+                localStorage.setItem("tokenBalance", tokenBalance); 
                 loginButton.innerText = username 
                     ? `${username} | Tokens: ${tokenBalance}`
                     : `Tokens: ${tokenBalance} | Wallet: ${publicKey.slice(0, 6)}...${publicKey.slice(-4)}`;
