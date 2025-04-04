@@ -103,11 +103,13 @@ function spinWheel() {
       if (winningColor === 'green') {
         resultText = `You won! The wheel landed on GREEN. You win ${betAmount * 5} chips!`;
         userChips += betAmount * 5; // 5x multiplier for green
+        localStorage.setItem("tokenBalance", userChips);
         logGameResult("Roulette", betAmount, winningsAmount, "win");
         PlayerResults("win");
       } else {
         resultText = `You won! The wheel landed on ${winningColor.toUpperCase()}. You win ${betAmount * 2} chips!`;
         userChips += betAmount * 2; // 2x multiplier for red or black
+        localStorage.setItem("tokenBalance", userChips);
         logGameResult("Roulette", betAmount, winningsAmount, "win");
         PlayerResults("win");
       }
@@ -119,7 +121,6 @@ function spinWheel() {
     
     document.getElementById("result").textContent = resultText;
     document.getElementById("chips").textContent = `Chips: ${userChips}`;
-    localStorage.setItem("tokenBalance", userChips.toString());
     userBet = null;
     document.getElementById("bet").textContent = "Your Bet: None";
     betAmountInput.value = "";
