@@ -1,6 +1,10 @@
 # 🔥 Diablo Lounge 🔥
 **The Ultimate Crypto Gambling & Underworld Marketplace**  
 
+Tasks assigned:
+Back End: Aman 
+Front End: Aman, Matthew, Armaan, Parth, Kevin
+
 Welcome to **Diablo Lounge**, where the stakes are high, and the rewards are even higher. This is not just another gambling site—it's an exclusive **dark web-inspired high-roller lounge** where users can **bet, trade, and play** with cryptocurrencies. Whether you're here to **test your luck, buy exclusive items, or engage in the underground economy**, **Diablo Lounge** offers an unparalleled experience.  
 
 ---
